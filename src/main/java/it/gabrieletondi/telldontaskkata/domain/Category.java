@@ -10,7 +10,7 @@ public class Category {
     }
 
     public Category(BigDecimal taxPercentage) {
-
+        this.taxPercentage = taxPercentage;
     }
 
     public BigDecimal getTaxPercentage() {
