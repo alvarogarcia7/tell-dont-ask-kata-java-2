@@ -5,6 +5,14 @@ import java.math.BigDecimal;
 public class Category {
     private BigDecimal taxPercentage;
 
+    public Category() {
+
+    }
+
+    public Category(BigDecimal taxPercentage) {
+
+    }
+
     public BigDecimal getTaxPercentage() {
         return taxPercentage;
     }
