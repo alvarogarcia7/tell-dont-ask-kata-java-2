@@ -12,7 +12,6 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -21,7 +20,6 @@ import static org.junit.Assert.assertThat;
 public class OrderCreationUseCaseTest {
     private final TestOrderRepository orderRepository = new TestOrderRepository();
     private Category food = new Category() {{
-        setName("food");
         setTaxPercentage(new BigDecimal("10"));
     }};;
     private final ProductCatalog productCatalog = new InMemoryProductCatalog(
