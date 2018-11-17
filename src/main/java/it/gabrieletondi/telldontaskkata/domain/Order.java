@@ -2,6 +2,7 @@ package it.gabrieletondi.telldontaskkata.domain;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 public class Order {
     private BigDecimal total;
@@ -57,5 +58,37 @@ public class Order {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return id == order.id &&
+                Objects.equals(total, order.total) &&
+                Objects.equals(currency, order.currency) &&
+                Objects.equals(items, order.items) &&
+                Objects.equals(tax, order.tax) &&
+                status == order.status;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(total, currency, items, tax, status, id);
+    }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Order{");
+        sb.append("total=").append(total);
+        sb.append(", currency='").append(currency).append('\'');
+        sb.append(", items=").append(items);
+        sb.append(", tax=").append(tax);
+        sb.append(", status=").append(status);
+        sb.append(", id=").append(id);
+        sb.append('}');
+        return sb.toString();
     }
 }
