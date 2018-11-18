@@ -20,10 +20,6 @@ public class Order {
         this.total = total;
     }
 
-    public String getCurrency() {
-        return currency;
-    }
-
     public void setCurrency(String currency) {
         this.currency = currency;
     }
