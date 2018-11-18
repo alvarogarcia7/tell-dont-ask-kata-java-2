@@ -54,18 +54,8 @@ public class OrderCreationUseCaseTest {
         final Order insertedOrder = orderRepository.getSavedOrder();
 
         final ArrayList<OrderItem> orderItems = new ArrayList<>();
-        OrderItem saladOrder = new OrderItem();
-        saladOrder.setTax(new BigDecimal("0.72"));
-        saladOrder.setTaxedAmount(new BigDecimal("7.84"));
-        saladOrder.setProduct(OrderCreationUseCaseTest.salad);
-        saladOrder.setQuantity(2);
-        orderItems.add(saladOrder);
-        OrderItem tomatoOrder = new OrderItem();
-        tomatoOrder.setTaxedAmount(new BigDecimal("15.36"));
-        tomatoOrder.setTax(new BigDecimal("1.41"));
-        tomatoOrder.setQuantity(3);
-        tomatoOrder.setProduct(OrderCreationUseCaseTest.tomato);
-        orderItems.add(tomatoOrder);
+        orderItems.add(OrderItem.buildFrom(salad, 2));
+        orderItems.add(OrderItem.buildFrom(tomato, 3));
         final Order order = Order.buildFrom(orderItems, CREATED, 0);
 
         assertThat(insertedOrder, equalTo(order));

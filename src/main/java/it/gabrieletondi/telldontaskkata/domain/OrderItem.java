@@ -4,25 +4,20 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class OrderItem {
-    private Product product;
-    private int quantity;
-    private BigDecimal taxedAmount;
-    private BigDecimal tax;
+    private final Product product;
+    private final int quantity;
+    private final BigDecimal taxedAmount;
+    private final BigDecimal tax;
 
-    public void setProduct(Product product) {
+    private OrderItem(Product product, int quantity, BigDecimal taxedAmount, BigDecimal tax) {
         this.product = product;
-    }
-
-    public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public void setTaxedAmount(BigDecimal taxedAmount) {
         this.taxedAmount = taxedAmount;
+        this.tax = tax;
     }
 
-    public void setTax(BigDecimal tax) {
-        this.tax = tax;
+    public static OrderItem buildFrom(Product product, int quantity) {
+        return new OrderItem(product, quantity, taxedAmount(product, quantity), tax(product, quantity));
     }
 
     public int quantity() {
@@ -61,7 +56,14 @@ public class OrderItem {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(product, quantity, taxedAmount, tax);
+    }
+
+    private static BigDecimal tax(Product product, int quantity) {
+        return product.getPrice().multiply(new BigDecimal(quantity));
+    }
+
+    private static BigDecimal taxedAmount(Product product, int quantity) {
+        return product.getCategory().getTaxPercentage().multiply(product.getPrice()).multiply(new BigDecimal(quantity));
     }
 }
