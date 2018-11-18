@@ -28,7 +28,7 @@ public class Order {
         this.total = total;
     }
 
-    public void setCurrency(String currency) {
+    private void setCurrency(String currency) {
         this.currency = currency;
     }
 
@@ -36,7 +36,7 @@ public class Order {
         return items;
     }
 
-    public void setItems(List<OrderItem> items) {
+    private void setItems(List<OrderItem> items) {
         this.items = items;
     }
 
