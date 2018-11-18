@@ -50,12 +50,10 @@ public class OrderCreationUseCaseTest {
         final Order insertedOrder = orderRepository.getSavedOrder();
 
         final Order order = new Order();
-        order.setItems(new ArrayList<>());
         order.setStatus(OrderStatus.CREATED);
         order.setTotal(new BigDecimal("23.20"));
         order.setTax(new BigDecimal("2.13"));
         order.setId(0);
-        order.setCurrency("EUR");
         {
             OrderItem saladOrder = new OrderItem();
             final Product product = OrderCreationUseCaseTest.salad;

@@ -8,7 +8,6 @@ import it.gabrieletondi.telldontaskkata.repository.OrderRepository;
 import it.gabrieletondi.telldontaskkata.repository.ProductCatalog;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 public class OrderCreationUseCase {
     private final OrderRepository orderRepository;
@@ -22,10 +21,6 @@ public class OrderCreationUseCase {
     public void run(SellItemsRequest request) {
         Order order = new Order();
         order.setStatus(OrderStatus.CREATED);
-        order.setItems(new ArrayList<>());
-        order.setCurrency("EUR");
-        order.setTotal(new BigDecimal("0.00"));
-        order.setTax(new BigDecimal("0.00"));
 
         for (SellItemRequest itemRequest : request.getRequests()) {
             Product product = productCatalog.getByName(itemRequest.getProductName());
