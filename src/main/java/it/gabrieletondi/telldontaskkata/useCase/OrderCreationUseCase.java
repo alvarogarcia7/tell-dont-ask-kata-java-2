@@ -32,16 +32,10 @@ public class OrderCreationUseCase {
 
             if (product == null) {
                 throw new UnknownProductException();
-            }
-            else {
+            } else {
                 final BigDecimal taxedAmount = product.taxedAmount(itemRequest.getQuantity());
                 final BigDecimal taxAmount = product.taxFor(itemRequest.getQuantity());
-
-                final OrderItem orderItem = new OrderItem();
-                orderItem.setProduct(product);
-                orderItem.setQuantity(itemRequest.getQuantity());
-                orderItem.setTax(taxAmount);
-                orderItem.setTaxedAmount(taxedAmount);
+                final OrderItem orderItem = build(itemRequest, product, taxAmount, taxedAmount);
                 order.getItems().add(orderItem);
 
                 order.setTotal(order.getTotal().add(taxedAmount));
@@ -50,6 +44,15 @@ public class OrderCreationUseCase {
         }
 
         orderRepository.save(order);
+    }
+
+    private static OrderItem build(SellItemRequest itemRequest, Product product, BigDecimal taxAmount, BigDecimal taxedAmount) {
+        final OrderItem orderItem = new OrderItem();
+        orderItem.setProduct(product);
+        orderItem.setQuantity(itemRequest.getQuantity());
+        orderItem.setTax(taxAmount);
+        orderItem.setTaxedAmount(taxedAmount);
+        return orderItem;
     }
 
 }
