@@ -16,7 +16,7 @@ public class OrderApprovalUseCaseTest {
     @Test
     public void approvedExistingOrder() throws Exception {
         Order initialOrder = new Order();
-        initialOrder.setStatus(OrderStatus.CREATED);
+        initialOrder.created();
         initialOrder.setId(1);
         orderRepository.addOrder(initialOrder);
 
@@ -33,7 +33,7 @@ public class OrderApprovalUseCaseTest {
     @Test
     public void rejectedExistingOrder() throws Exception {
         Order initialOrder = new Order();
-        initialOrder.setStatus(OrderStatus.CREATED);
+        initialOrder.created();
         initialOrder.setId(1);
         orderRepository.addOrder(initialOrder);
 
@@ -50,7 +50,7 @@ public class OrderApprovalUseCaseTest {
     @Test(expected = RejectedOrderCannotBeApprovedException.class)
     public void cannotApproveRejectedOrder() throws Exception {
         Order initialOrder = new Order();
-        initialOrder.setStatus(OrderStatus.REJECTED);
+        rejected(initialOrder);
         initialOrder.setId(1);
         orderRepository.addOrder(initialOrder);
 
@@ -63,10 +63,14 @@ public class OrderApprovalUseCaseTest {
         assertThat(orderRepository.getSavedOrder(), is(nullValue()));
     }
 
+    private void rejected(Order initialOrder) {
+        initialOrder.setStatus(OrderStatus.REJECTED);
+    }
+
     @Test(expected = ApprovedOrderCannotBeRejectedException.class)
     public void cannotRejectApprovedOrder() throws Exception {
         Order initialOrder = new Order();
-        initialOrder.setStatus(OrderStatus.APPROVED);
+        initialOrder.approved();
         initialOrder.setId(1);
         orderRepository.addOrder(initialOrder);
 

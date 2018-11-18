@@ -103,4 +103,12 @@ public class Order {
     public void addTotal(BigDecimal taxedAmount) {
         setTotal(getTotal().add(taxedAmount));
     }
+
+    public void created() {
+        setStatus(OrderStatus.CREATED);
+    }
+
+    public void approved() {
+        setStatus(OrderStatus.APPROVED);
+    }
 }
