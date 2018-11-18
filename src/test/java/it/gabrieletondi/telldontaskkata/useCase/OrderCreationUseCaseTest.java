@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 public class OrderCreationUseCaseTest {
@@ -48,21 +48,6 @@ public class OrderCreationUseCaseTest {
         useCase.run(request);
 
         final Order insertedOrder = orderRepository.getSavedOrder();
-        assertThat(insertedOrder.getStatus(), is(OrderStatus.CREATED));
-        assertThat(insertedOrder.getTotal(), is(new BigDecimal("23.20")));
-        assertThat(insertedOrder.getTax(), is(new BigDecimal("2.13")));
-        assertThat(insertedOrder.getCurrency(), is("EUR"));
-        assertThat(insertedOrder.getItems(), hasSize(2));
-        assertThat(insertedOrder.getItems().get(0).getProduct().getName(), is("salad"));
-        assertThat(insertedOrder.getItems().get(0).getProduct().getPrice(), is(new BigDecimal("3.56")));
-        assertThat(insertedOrder.getItems().get(0).getQuantity(), is(2));
-        assertThat(insertedOrder.getItems().get(0).getTaxedAmount(), is(new BigDecimal("7.84")));
-        assertThat(insertedOrder.getItems().get(0).getTax(), is(new BigDecimal("0.72")));
-        assertThat(insertedOrder.getItems().get(1).getProduct().getName(), is("tomato"));
-        assertThat(insertedOrder.getItems().get(1).getProduct().getPrice(), is(new BigDecimal("4.65")));
-        assertThat(insertedOrder.getItems().get(1).getQuantity(), is(3));
-        assertThat(insertedOrder.getItems().get(1).getTaxedAmount(), is(new BigDecimal("15.36")));
-        assertThat(insertedOrder.getItems().get(1).getTax(), is(new BigDecimal("1.41")));
 
         final Order order = new Order();
         order.setItems(new ArrayList<>());
