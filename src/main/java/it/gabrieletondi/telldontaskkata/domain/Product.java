@@ -60,11 +60,19 @@ public class Product {
         return sb.toString();
     }
 
-    public BigDecimal unitaryTax() {
+    private BigDecimal unitaryTax() {
         return getPrice().divide(valueOf(100)).multiply(getCategory().getTaxPercentage()).setScale(2, HALF_UP);
     }
 
-    public BigDecimal unitaryTaxedAmount(BigDecimal unitaryTax) {
-        return getPrice().add(unitaryTax).setScale(2, HALF_UP);
+    private BigDecimal unitaryTaxedAmount() {
+        return getPrice().add(unitaryTax()).setScale(2, HALF_UP);
+    }
+
+    public BigDecimal taxedAmount(int quantity) {
+        return unitaryTaxedAmount().multiply(valueOf(quantity)).setScale(2, HALF_UP);
+    }
+
+    public BigDecimal taxFor(int quantity) {
+        return unitaryTax().multiply(valueOf(quantity));
     }
 }
