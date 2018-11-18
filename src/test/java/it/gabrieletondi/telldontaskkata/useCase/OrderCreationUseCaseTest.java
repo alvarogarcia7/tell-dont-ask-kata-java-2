@@ -57,22 +57,22 @@ public class OrderCreationUseCaseTest {
         order.setId(0);
         order.setCurrency("EUR");
         {
-            OrderItem salad = new OrderItem();
+            OrderItem saladOrder = new OrderItem();
             final Product product = OrderCreationUseCaseTest.salad;
-            salad.setTax(new BigDecimal("0.72"));
-            salad.setTaxedAmount(new BigDecimal("7.84"));
-            salad.setProduct(product);
-            salad.setQuantity(2);
-            order.getItems().add(salad);
+            saladOrder.setTax(new BigDecimal("0.72"));
+            saladOrder.setTaxedAmount(new BigDecimal("7.84"));
+            saladOrder.setProduct(product);
+            saladOrder.setQuantity(2);
+            order.getItems().add(saladOrder);
         }
         {
-            OrderItem tomato = new OrderItem();
-            tomato.setTaxedAmount(new BigDecimal("15.36"));
-            tomato.setTax(new BigDecimal("1.41"));
-            tomato.setQuantity(3);
+            OrderItem tomatoOrder = new OrderItem();
+            tomatoOrder.setTaxedAmount(new BigDecimal("15.36"));
+            tomatoOrder.setTax(new BigDecimal("1.41"));
+            tomatoOrder.setQuantity(3);
             final Product product1 = OrderCreationUseCaseTest.tomato;
-            tomato.setProduct(product1);
-            order.getItems().add(tomato);
+            tomatoOrder.setProduct(product1);
+            order.getItems().add(tomatoOrder);
         }
 
         assertThat(insertedOrder, equalTo(order));
