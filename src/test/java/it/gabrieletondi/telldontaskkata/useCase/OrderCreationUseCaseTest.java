@@ -58,10 +58,7 @@ public class OrderCreationUseCaseTest {
         order.setCurrency("EUR");
         {
             OrderItem salad = new OrderItem();
-            final Product product = new Product();
-            product.setName("salad");
-            product.setPrice(new BigDecimal("3.56"));
-            product.setCategory(new Category(new BigDecimal("10")));
+            final Product product = OrderCreationUseCaseTest.salad;
             salad.setTax(new BigDecimal("0.72"));
             salad.setTaxedAmount(new BigDecimal("7.84"));
             salad.setProduct(product);
@@ -73,10 +70,7 @@ public class OrderCreationUseCaseTest {
             tomato.setTaxedAmount(new BigDecimal("15.36"));
             tomato.setTax(new BigDecimal("1.41"));
             tomato.setQuantity(3);
-            final Product product1 = new Product();
-            product1.setName("tomato");
-            product1.setPrice(new BigDecimal("4.65"));
-            product1.setCategory(new Category(new BigDecimal("10")));
+            final Product product1 = OrderCreationUseCaseTest.tomato;
             tomato.setProduct(product1);
             order.getItems().add(tomato);
         }
