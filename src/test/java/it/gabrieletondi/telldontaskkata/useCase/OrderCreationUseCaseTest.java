@@ -1,9 +1,6 @@
 package it.gabrieletondi.telldontaskkata.useCase;
 
-import it.gabrieletondi.telldontaskkata.domain.Category;
-import it.gabrieletondi.telldontaskkata.domain.Order;
-import it.gabrieletondi.telldontaskkata.domain.OrderStatus;
-import it.gabrieletondi.telldontaskkata.domain.Product;
+import it.gabrieletondi.telldontaskkata.domain.*;
 import it.gabrieletondi.telldontaskkata.doubles.InMemoryProductCatalog;
 import it.gabrieletondi.telldontaskkata.doubles.TestOrderRepository;
 import it.gabrieletondi.telldontaskkata.repository.ProductCatalog;
@@ -13,27 +10,24 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class OrderCreationUseCaseTest {
     private final TestOrderRepository orderRepository = new TestOrderRepository();
-    private Category food = new Category(new BigDecimal("10"));
-    private final ProductCatalog productCatalog = new InMemoryProductCatalog(
-            Arrays.<Product>asList(
-                    new Product() {{
-                        setName("salad");
-                        setPrice(new BigDecimal("3.56"));
-                        setCategory(food);
-                    }},
-                    new Product() {{
-                        setName("tomato");
-                        setPrice(new BigDecimal("4.65"));
-                        setCategory(food);
-                    }}
-            )
-    );
+    final static Product salad = new Product();
+    final static Product tomato = new Product();
+
+    static {
+        salad.setName("salad");
+        salad.setPrice(new BigDecimal("3.56"));
+        salad.setCategory(new Category(new BigDecimal("10")));
+        tomato.setName("tomato");
+        tomato.setPrice(new BigDecimal("4.65"));
+        tomato.setCategory(new Category(new BigDecimal("10")));
+    }
+
+    private final ProductCatalog productCatalog = new InMemoryProductCatalog(Arrays.asList(salad, tomato));
     private final OrderCreationUseCase useCase = new OrderCreationUseCase(orderRepository, productCatalog);
 
     @Test
@@ -69,6 +63,41 @@ public class OrderCreationUseCaseTest {
         assertThat(insertedOrder.getItems().get(1).getQuantity(), is(3));
         assertThat(insertedOrder.getItems().get(1).getTaxedAmount(), is(new BigDecimal("15.36")));
         assertThat(insertedOrder.getItems().get(1).getTax(), is(new BigDecimal("1.41")));
+
+        final Order order = new Order();
+        order.setItems(new ArrayList<>());
+        order.setStatus(OrderStatus.CREATED);
+        order.setTotal(new BigDecimal("23.20"));
+        order.setTax(new BigDecimal("2.13"));
+        order.setId(0);
+        order.setCurrency("EUR");
+        {
+            OrderItem salad = new OrderItem();
+            final Product product = new Product();
+            product.setName("salad");
+            product.setPrice(new BigDecimal("3.56"));
+            product.setCategory(new Category(new BigDecimal("10")));
+            salad.setTax(new BigDecimal("0.72"));
+            salad.setTaxedAmount(new BigDecimal("7.84"));
+            salad.setProduct(product);
+            salad.setQuantity(2);
+            order.getItems().add(salad);
+        }
+        {
+            OrderItem tomato = new OrderItem();
+            tomato.setTaxedAmount(new BigDecimal("15.36"));
+            tomato.setTax(new BigDecimal("1.41"));
+            tomato.setQuantity(3);
+            final Product product1 = new Product();
+            product1.setName("tomato");
+            product1.setPrice(new BigDecimal("4.65"));
+            product1.setCategory(new Category(new BigDecimal("10")));
+            tomato.setProduct(product1);
+            order.getItems().add(tomato);
+        }
+
+        assertThat(insertedOrder, equalTo(order));
+
     }
 
     @Test(expected = UnknownProductException.class)
