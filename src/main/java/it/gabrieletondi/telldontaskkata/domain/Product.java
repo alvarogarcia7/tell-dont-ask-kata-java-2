@@ -63,4 +63,8 @@ public class Product {
     public BigDecimal unitaryTax() {
         return getPrice().divide(valueOf(100)).multiply(getCategory().getTaxPercentage()).setScale(2, HALF_UP);
     }
+
+    public BigDecimal unitaryTaxedAmount(BigDecimal unitaryTax) {
+        return getPrice().add(unitaryTax).setScale(2, HALF_UP);
+    }
 }
