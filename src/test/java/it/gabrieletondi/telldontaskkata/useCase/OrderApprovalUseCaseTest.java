@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.*;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -17,27 +18,27 @@ public class OrderApprovalUseCaseTest {
 
     @Test
     public void approvedExistingOrder() {
-        orderRepository.addOrder(Order.buildFrom(new ArrayList<>(), OrderStatus.CREATED, 1));
+        orderRepository.addOrder(order(CREATED));
 
         useCase.run(orderApprovalRequest(true));
 
         final Order savedOrder = orderRepository.getSavedOrder();
-        assertThat(savedOrder.getStatus(), is(OrderStatus.APPROVED));
+        assertThat(savedOrder.getStatus(), is(APPROVED));
     }
 
     @Test
     public void rejectedExistingOrder() {
-        orderRepository.addOrder(Order.buildFrom(new ArrayList<>(), OrderStatus.CREATED, 1));
+        orderRepository.addOrder(order(CREATED));
 
         useCase.run(orderApprovalRequest(false));
 
         final Order savedOrder = orderRepository.getSavedOrder();
-        assertThat(savedOrder.getStatus(), is(OrderStatus.REJECTED));
+        assertThat(savedOrder.getStatus(), is(REJECTED));
     }
 
     @Test(expected = RejectedOrderCannotBeApprovedException.class)
     public void cannotApproveRejectedOrder() {
-        orderRepository.addOrder(Order.buildFrom(new ArrayList<>(), OrderStatus.REJECTED, 1));
+        orderRepository.addOrder(order(REJECTED));
 
         useCase.run(orderApprovalRequest(true));
 
@@ -47,16 +48,20 @@ public class OrderApprovalUseCaseTest {
 
     @Test(expected = ApprovedOrderCannotBeRejectedException.class)
     public void cannotRejectApprovedOrder() {
-        orderRepository.addOrder(Order.buildFrom(new ArrayList<>(), OrderStatus.APPROVED, 1));
+        orderRepository.addOrder(order(APPROVED));
 
         useCase.run(orderApprovalRequest(false));
 
         assertThat(orderRepository.getSavedOrder(), is(nullValue()));
     }
 
+    private Order order(OrderStatus approved) {
+        return Order.buildFrom(new ArrayList<>(), approved, 1);
+    }
+
     @Test(expected = ShippedOrdersCannotBeChangedException.class)
     public void shippedOrdersCannotBeApproved() {
-        orderRepository.addOrder(Order.buildFrom(new ArrayList<>(), OrderStatus.SHIPPED, 1));
+        orderRepository.addOrder(order(SHIPPED));
 
         useCase.run(orderApprovalRequest(true));
 
@@ -65,7 +70,7 @@ public class OrderApprovalUseCaseTest {
 
     @Test(expected = ShippedOrdersCannotBeChangedException.class)
     public void shippedOrdersCannotBeRejected() {
-        orderRepository.addOrder(Order.buildFrom(new ArrayList<>(), OrderStatus.SHIPPED, 1));
+        orderRepository.addOrder(order(SHIPPED));
 
         useCase.run(orderApprovalRequest(false));
 
