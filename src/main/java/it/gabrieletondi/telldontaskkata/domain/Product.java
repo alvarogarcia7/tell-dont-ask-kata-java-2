@@ -3,36 +3,27 @@ package it.gabrieletondi.telldontaskkata.domain;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-import static java.math.BigDecimal.valueOf;
-import static java.math.RoundingMode.HALF_UP;
-
 public class Product {
-    private String name;
-    private BigDecimal price;
-    private Category category;
+    private final String name;
+    private final BigDecimal price;
+    private final Category category;
+
+    public Product(String name, BigDecimal price, Category category) {
+        this.name = name;
+        this.price = price;
+        this.category = category;
+    }
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
     public Category getCategory() {
         return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
     }
 
     @Override
@@ -58,21 +49,5 @@ public class Product {
         sb.append(", category=").append(category);
         sb.append('}');
         return sb.toString();
-    }
-
-    private BigDecimal unitaryTax() {
-        return getPrice().divide(valueOf(100)).multiply(getCategory().getTaxPercentage()).setScale(2, HALF_UP);
-    }
-
-    private BigDecimal unitaryTaxedAmount() {
-        return getPrice().add(unitaryTax()).setScale(2, HALF_UP);
-    }
-
-    public BigDecimal taxedAmount(int quantity) {
-        return unitaryTaxedAmount().multiply(valueOf(quantity)).setScale(2, HALF_UP);
-    }
-
-    public BigDecimal taxFor(int quantity) {
-        return unitaryTax().multiply(valueOf(quantity));
     }
 }

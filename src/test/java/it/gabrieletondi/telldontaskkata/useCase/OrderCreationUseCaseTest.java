@@ -19,17 +19,10 @@ import static org.junit.Assert.assertThat;
 
 public class OrderCreationUseCaseTest {
     private final TestOrderRepository orderRepository = new TestOrderRepository();
-    final static Product salad = new Product();
-    final static Product tomato = new Product();
+    final static Category category = new Category(new BigDecimal("10"));
+    final static Product salad = new Product("salad", new BigDecimal("3.56"), category);
+    final static Product tomato = new Product("tomato", new BigDecimal("4.65"), category);
 
-    static {
-        salad.setName("salad");
-        salad.setPrice(new BigDecimal("3.56"));
-        salad.setCategory(new Category(new BigDecimal("10")));
-        tomato.setName("tomato");
-        tomato.setPrice(new BigDecimal("4.65"));
-        tomato.setCategory(new Category(new BigDecimal("10")));
-    }
 
     private final ProductCatalog productCatalog = new InMemoryProductCatalog(Arrays.asList(salad, tomato));
     private final OrderCreationUseCase useCase = new OrderCreationUseCase(orderRepository, productCatalog);
