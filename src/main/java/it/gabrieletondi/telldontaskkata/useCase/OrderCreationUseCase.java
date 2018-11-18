@@ -33,8 +33,8 @@ public class OrderCreationUseCase {
                 final OrderItem orderItem = build(itemRequest, product, taxAmount, taxedAmount);
                 order.getItems().add(orderItem);
 
-                order.setTotal(order.getTotal().add(taxedAmount));
-                order.setTax(order.getTax().add(taxAmount));
+                order.addTotal(taxedAmount);
+                order.addTax(taxAmount);
             }
         }
 

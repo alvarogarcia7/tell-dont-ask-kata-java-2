@@ -20,7 +20,7 @@ public class Order {
         this.setItems(new ArrayList<>());
     }
 
-    public BigDecimal getTotal() {
+    private BigDecimal getTotal() {
         return total;
     }
 
@@ -40,7 +40,7 @@ public class Order {
         this.items = items;
     }
 
-    public BigDecimal getTax() {
+    private BigDecimal getTax() {
         return tax;
     }
 
@@ -94,5 +94,13 @@ public class Order {
         sb.append(", id=").append(id);
         sb.append('}');
         return sb.toString();
+    }
+
+    public void addTax(BigDecimal taxAmount) {
+        setTax(getTax().add(taxAmount));
+    }
+
+    public void addTotal(BigDecimal taxedAmount) {
+        setTotal(getTotal().add(taxedAmount));
     }
 }
