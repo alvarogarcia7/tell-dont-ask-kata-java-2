@@ -1,67 +1,45 @@
 package it.gabrieletondi.telldontaskkata.domain;
 
+import it.gabrieletondi.telldontaskkata.useCase.*;
+
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+
+import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.*;
 
 public class Order {
-    private BigDecimal total;
-    private String currency;
-    private List<OrderItem> items;
-    private BigDecimal tax;
-    private OrderStatus status;
-    private int id;
+    private final BigDecimal total;
+    private final String currency;
+    private final List<OrderItem> items;
+    private final BigDecimal tax;
+    private final OrderStatus status;
+    private final int id;
 
-    public Order() {
-        this.setCurrency("EUR");
-        this.setTotal(new BigDecimal("0"));
-        this.setTax(new BigDecimal("0"));
-        this.setItems(new ArrayList<>());
-    }
-
-    private BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
+    private Order(int id, List<OrderItem> items, OrderStatus status, BigDecimal total, BigDecimal tax) {
         this.total = total;
-    }
-
-    private void setCurrency(String currency) {
-        this.currency = currency;
-    }
-
-    public List<OrderItem> getItems() {
-        return items;
-    }
-
-    private void setItems(List<OrderItem> items) {
+        this.currency = "EUR";
         this.items = items;
-    }
-
-    private BigDecimal getTax() {
-        return tax;
-    }
-
-    public void setTax(BigDecimal tax) {
         this.tax = tax;
+        this.status = status;
+        this.id = id;
+    }
+
+    public static Order buildFrom(List<OrderItem> items, OrderStatus status, int id) {
+        final BigDecimal totalTax = items.stream().map(OrderItem::tax).reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal totalAmount = items.stream().map(it -> {
+            return it.product().getPrice().multiply(new BigDecimal(it.quantity()));
+        }).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return new Order(id, items, status, totalAmount, totalTax);
     }
 
     public OrderStatus getStatus() {
         return status;
     }
 
-    public void setStatus(OrderStatus status) {
-        this.status = status;
-    }
-
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     @Override
@@ -96,19 +74,31 @@ public class Order {
         return sb.toString();
     }
 
-    public void addTax(BigDecimal taxAmount) {
-        setTax(getTax().add(taxAmount));
+    public Optional<Order> ship() {
+        if (status.equals(CREATED) || status.equals(REJECTED)) {
+            throw new OrderCannotBeShippedException();
+        }
+
+        if (status.equals(SHIPPED)) {
+            throw new OrderCannotBeShippedTwiceException();
+        }
+
+        return Optional.of(buildFrom(this.items, OrderStatus.SHIPPED, this.id));
     }
 
-    public void addTotal(BigDecimal taxedAmount) {
-        setTotal(getTotal().add(taxedAmount));
-    }
+    public Optional<Order> approve(OrderApprovalRequest request) {
+        if (status == OrderStatus.SHIPPED) {
+            throw new ShippedOrdersCannotBeChangedException();
+        }
 
-    public void created() {
-        setStatus(OrderStatus.CREATED);
-    }
+        if (request.isApproved() && status == OrderStatus.REJECTED) {
+            throw new RejectedOrderCannotBeApprovedException();
+        }
 
-    public void approved() {
-        setStatus(OrderStatus.APPROVED);
+        if (!request.isApproved() && status == OrderStatus.APPROVED) {
+            throw new ApprovedOrderCannotBeRejectedException();
+        }
+
+        return Optional.of(request.isApproved() ? buildFrom(this.items, OrderStatus.APPROVED, id) : buildFrom(items, OrderStatus.REJECTED, id));
     }
 }

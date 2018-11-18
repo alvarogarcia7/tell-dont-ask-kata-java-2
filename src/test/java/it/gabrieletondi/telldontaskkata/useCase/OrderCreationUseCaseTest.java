@@ -1,6 +1,9 @@
 package it.gabrieletondi.telldontaskkata.useCase;
 
-import it.gabrieletondi.telldontaskkata.domain.*;
+import it.gabrieletondi.telldontaskkata.domain.Category;
+import it.gabrieletondi.telldontaskkata.domain.Order;
+import it.gabrieletondi.telldontaskkata.domain.OrderItem;
+import it.gabrieletondi.telldontaskkata.domain.Product;
 import it.gabrieletondi.telldontaskkata.doubles.InMemoryProductCatalog;
 import it.gabrieletondi.telldontaskkata.doubles.TestOrderRepository;
 import it.gabrieletondi.telldontaskkata.repository.ProductCatalog;
@@ -10,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static it.gabrieletondi.telldontaskkata.domain.OrderStatus.CREATED;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -31,7 +35,7 @@ public class OrderCreationUseCaseTest {
     private final OrderCreationUseCase useCase = new OrderCreationUseCase(orderRepository, productCatalog);
 
     @Test
-    public void sellMultipleItems() throws Exception {
+    public void sellMultipleItems() {
         SellItemRequest saladRequest = new SellItemRequest();
         saladRequest.setProductName("salad");
         saladRequest.setQuantity(2);
@@ -49,36 +53,26 @@ public class OrderCreationUseCaseTest {
 
         final Order insertedOrder = orderRepository.getSavedOrder();
 
-        final Order order = new Order();
-        order.setStatus(OrderStatus.CREATED);
-        order.setTotal(new BigDecimal("23.20"));
-        order.setTax(new BigDecimal("2.13"));
-        order.setId(0);
-        {
-            OrderItem saladOrder = new OrderItem();
-            final Product product = OrderCreationUseCaseTest.salad;
-            saladOrder.setTax(new BigDecimal("0.72"));
-            saladOrder.setTaxedAmount(new BigDecimal("7.84"));
-            saladOrder.setProduct(product);
-            saladOrder.setQuantity(2);
-            order.getItems().add(saladOrder);
-        }
-        {
-            OrderItem tomatoOrder = new OrderItem();
-            tomatoOrder.setTaxedAmount(new BigDecimal("15.36"));
-            tomatoOrder.setTax(new BigDecimal("1.41"));
-            tomatoOrder.setQuantity(3);
-            final Product product1 = OrderCreationUseCaseTest.tomato;
-            tomatoOrder.setProduct(product1);
-            order.getItems().add(tomatoOrder);
-        }
+        final ArrayList<OrderItem> orderItems = new ArrayList<>();
+        OrderItem saladOrder = new OrderItem();
+        saladOrder.setTax(new BigDecimal("0.72"));
+        saladOrder.setTaxedAmount(new BigDecimal("7.84"));
+        saladOrder.setProduct(OrderCreationUseCaseTest.salad);
+        saladOrder.setQuantity(2);
+        orderItems.add(saladOrder);
+        OrderItem tomatoOrder = new OrderItem();
+        tomatoOrder.setTaxedAmount(new BigDecimal("15.36"));
+        tomatoOrder.setTax(new BigDecimal("1.41"));
+        tomatoOrder.setQuantity(3);
+        tomatoOrder.setProduct(OrderCreationUseCaseTest.tomato);
+        orderItems.add(tomatoOrder);
+        final Order order = Order.buildFrom(orderItems, CREATED, 0);
 
         assertThat(insertedOrder, equalTo(order));
-
     }
 
     @Test(expected = UnknownProductException.class)
-    public void unknownProduct() throws Exception {
+    public void unknownProduct() {
         SellItemsRequest request = new SellItemsRequest();
         request.setRequests(new ArrayList<>());
         SellItemRequest unknownProductRequest = new SellItemRequest();

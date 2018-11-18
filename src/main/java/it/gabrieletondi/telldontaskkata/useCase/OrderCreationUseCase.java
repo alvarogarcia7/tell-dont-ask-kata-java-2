@@ -8,6 +8,7 @@ import it.gabrieletondi.telldontaskkata.repository.OrderRepository;
 import it.gabrieletondi.telldontaskkata.repository.ProductCatalog;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 
 public class OrderCreationUseCase {
     private final OrderRepository orderRepository;
@@ -19,9 +20,8 @@ public class OrderCreationUseCase {
     }
 
     public void run(SellItemsRequest request) {
-        Order order = new Order();
-        order.setStatus(OrderStatus.CREATED);
 
+        final ArrayList<OrderItem> items = new ArrayList<>();
         for (SellItemRequest itemRequest : request.getRequests()) {
             Product product = productCatalog.getByName(itemRequest.getProductName());
 
@@ -31,12 +31,11 @@ public class OrderCreationUseCase {
                 final BigDecimal taxedAmount = product.taxedAmount(itemRequest.getQuantity());
                 final BigDecimal taxAmount = product.taxFor(itemRequest.getQuantity());
                 final OrderItem orderItem = build(itemRequest, product, taxAmount, taxedAmount);
-                order.getItems().add(orderItem);
+                items.add(orderItem);
 
-                order.addTotal(taxedAmount);
-                order.addTax(taxAmount);
             }
         }
+        Order order = Order.buildFrom(items, OrderStatus.CREATED, 0);
 
         orderRepository.save(order);
     }

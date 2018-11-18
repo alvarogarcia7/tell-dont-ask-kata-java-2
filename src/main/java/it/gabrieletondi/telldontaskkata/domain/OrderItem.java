@@ -25,6 +25,18 @@ public class OrderItem {
         this.tax = tax;
     }
 
+    public int quantity() {
+        return quantity;
+    }
+
+    public BigDecimal tax() {
+        return tax;
+    }
+
+    public Product product() {
+        return product;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
