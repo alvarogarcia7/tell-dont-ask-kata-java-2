@@ -55,10 +55,6 @@ public class OrderApprovalUseCaseTest {
         assertThat(orderRepository.getSavedOrder(), is(nullValue()));
     }
 
-    private Order order(OrderStatus approved) {
-        return Order.buildFrom(new ArrayList<>(), approved, 1);
-    }
-
     @Test(expected = ShippedOrdersCannotBeChangedException.class)
     public void shippedOrdersCannotBeApproved() {
         orderRepository.addOrder(order(SHIPPED));
@@ -75,6 +71,10 @@ public class OrderApprovalUseCaseTest {
         useCase.run(orderApprovalRequest(false));
 
         assertThat(orderRepository.getSavedOrder(), is(nullValue()));
+    }
+
+    private Order order(OrderStatus approved) {
+        return Order.buildFrom(new ArrayList<>(), approved, 1);
     }
 
     private OrderApprovalRequest orderApprovalRequest(boolean approved) {
