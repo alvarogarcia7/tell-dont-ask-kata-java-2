@@ -5,6 +5,10 @@ import it.gabrieletondi.telldontaskkata.domain.OrderItem;
 import it.gabrieletondi.telldontaskkata.domain.OrderStatus;
 import it.gabrieletondi.telldontaskkata.doubles.TestOrderRepository;
 import it.gabrieletondi.telldontaskkata.doubles.TestShipmentService;
+import it.gabrieletondi.telldontaskkata.useCase.ship_order.OrderCannotBeShippedException;
+import it.gabrieletondi.telldontaskkata.useCase.ship_order.OrderCannotBeShippedTwiceException;
+import it.gabrieletondi.telldontaskkata.useCase.ship_order.OrderShipmentRequest;
+import it.gabrieletondi.telldontaskkata.useCase.ship_order.OrderShipmentUseCase;
 import org.junit.Test;
 
 import java.util.ArrayList;

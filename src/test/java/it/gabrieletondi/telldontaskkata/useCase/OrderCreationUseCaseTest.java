@@ -7,6 +7,9 @@ import it.gabrieletondi.telldontaskkata.domain.Product;
 import it.gabrieletondi.telldontaskkata.doubles.InMemoryProductCatalog;
 import it.gabrieletondi.telldontaskkata.doubles.TestOrderRepository;
 import it.gabrieletondi.telldontaskkata.repository.ProductCatalog;
+import it.gabrieletondi.telldontaskkata.useCase.create_order.OrderCreationUseCase;
+import it.gabrieletondi.telldontaskkata.useCase.sell_item.SellItemRequest;
+import it.gabrieletondi.telldontaskkata.useCase.sell_item.SellItemsRequest;
 import org.junit.Test;
 
 import java.math.BigDecimal;

@@ -1,4 +1,4 @@
-package it.gabrieletondi.telldontaskkata.useCase;
+package it.gabrieletondi.telldontaskkata.useCase.sell_item;
 
 import java.util.List;
 

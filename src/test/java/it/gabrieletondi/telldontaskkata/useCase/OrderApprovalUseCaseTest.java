@@ -3,6 +3,8 @@ package it.gabrieletondi.telldontaskkata.useCase;
 import it.gabrieletondi.telldontaskkata.domain.Order;
 import it.gabrieletondi.telldontaskkata.domain.OrderStatus;
 import it.gabrieletondi.telldontaskkata.doubles.TestOrderRepository;
+import it.gabrieletondi.telldontaskkata.useCase.approve_order.OrderApprovalRequest;
+import it.gabrieletondi.telldontaskkata.useCase.approve_order.OrderApprovalUseCase;
 import org.junit.Test;
 
 import java.util.ArrayList;
