@@ -14,6 +14,14 @@ public class Product {
         this.category = category;
     }
 
+    public BigDecimal taxedAmount(int quantity) {
+        return this.getCategory().getTaxPercentage().multiply(this.getPrice()).multiply(new BigDecimal(quantity));
+    }
+
+    public BigDecimal tax(int quantity) {
+        return this.getPrice().multiply(new BigDecimal(quantity));
+    }
+
     public String getName() {
         return name;
     }
@@ -22,7 +30,7 @@ public class Product {
         return price;
     }
 
-    public Category getCategory() {
+    private Category getCategory() {
         return category;
     }
 

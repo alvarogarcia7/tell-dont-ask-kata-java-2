@@ -17,19 +17,15 @@ public class OrderItem {
     }
 
     public static OrderItem buildFrom(Product product, int quantity) {
-        return new OrderItem(product, quantity, taxedAmount(product, quantity), tax(product, quantity));
+        return new OrderItem(product, quantity, product.taxedAmount(quantity), product.tax(quantity));
     }
 
-    public int quantity() {
-        return quantity;
+    public BigDecimal totalPrice() {
+        return product.getPrice().multiply(new BigDecimal(quantity));
     }
 
     public BigDecimal tax() {
         return tax;
-    }
-
-    public Product product() {
-        return product;
     }
 
     @Override
@@ -57,13 +53,5 @@ public class OrderItem {
     @Override
     public int hashCode() {
         return Objects.hash(product, quantity, taxedAmount, tax);
-    }
-
-    private static BigDecimal tax(Product product, int quantity) {
-        return product.getPrice().multiply(new BigDecimal(quantity));
-    }
-
-    private static BigDecimal taxedAmount(Product product, int quantity) {
-        return product.getCategory().getTaxPercentage().multiply(product.getPrice()).multiply(new BigDecimal(quantity));
     }
 }

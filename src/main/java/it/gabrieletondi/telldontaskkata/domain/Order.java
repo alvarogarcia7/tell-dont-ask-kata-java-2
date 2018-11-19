@@ -28,14 +28,8 @@ public class Order {
 
     public static Order buildFrom(List<OrderItem> items, OrderStatus status, int id) {
         final BigDecimal totalTax = items.stream().map(OrderItem::tax).reduce(BigDecimal.ZERO, BigDecimal::add);
-        final BigDecimal totalAmount = items.stream().map(it -> {
-            return it.product().getPrice().multiply(new BigDecimal(it.quantity()));
-        }).reduce(BigDecimal.ZERO, BigDecimal::add);
+        final BigDecimal totalAmount = items.stream().map(OrderItem::totalPrice).reduce(BigDecimal.ZERO, BigDecimal::add);
         return new Order(id, items, status, totalAmount, totalTax);
-    }
-
-    public OrderStatus getStatus() {
-        return status;
     }
 
     public int getId() {
